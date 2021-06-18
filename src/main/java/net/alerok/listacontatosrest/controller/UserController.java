@@ -10,18 +10,28 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
-    @GetMapping(path = "/api/user/getUserById/{id}")
-    public ResponseEntity getUserById(@PathVariable("id") Long id) {
-        return repository.findById(id)
+    @GetMapping(path = "/api/user/getById/{id}")
+    public ResponseEntity<User> getById(@PathVariable("id") Long id) {
+        return userRepository.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping(path = "/api/user/createUser")
-    public User save(@RequestBody User user) {
-        return repository.save(user);
+    @PostMapping(path = "/api/user/add")
+    public User add(@RequestBody User user) {
+        return userRepository.save(user);
+    }
+
+    @GetMapping(path = "/api/user/delete/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @PostMapping(path = "/api/user/edit")
+    public User edit(User user) {
+        return userRepository.save(user);
     }
 
 }
