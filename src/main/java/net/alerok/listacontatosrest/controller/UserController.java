@@ -12,6 +12,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping(path = "/api/user/getAll")
+    public Iterable<User> getAll() {
+        return userRepository.findAll();
+    }
+
     @GetMapping(path = "/api/user/getById/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") Long id) {
         return userRepository.findById(id)
