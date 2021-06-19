@@ -12,7 +12,7 @@ public class UserController {
 
     @GetMapping(path = "/api/user/getAll")
     public Iterable<User> getAll() {
-        return userRepository.findAll();
+        return userRepository.getAll();
     }
 
     @GetMapping(path = "/api/user/getById/{id}")
