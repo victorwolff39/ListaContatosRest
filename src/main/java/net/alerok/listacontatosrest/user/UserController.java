@@ -1,7 +1,5 @@
-package net.alerok.listacontatosrest.controller;
+package net.alerok.listacontatosrest.user;
 
-import net.alerok.listacontatosrest.model.User;
-import net.alerok.listacontatosrest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

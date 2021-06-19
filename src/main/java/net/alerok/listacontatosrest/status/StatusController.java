@@ -1,4 +1,4 @@
-package net.alerok.listacontatosrest.controller;
+package net.alerok.listacontatosrest.status;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,23 +1,25 @@
-package net.alerok.listacontatosrest.model;
+package net.alerok.listacontatosrest.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity(name = "mc_user")
 public class User {
 
     @Id
-    public Long id;
+    @GeneratedValue
+    private Long id;
 
     @Column(nullable = false, length = 250)
-    public String name;
+    private String name;
 
     @Column(nullable = false, length = 10)
-    public String login;
+    private String login;
 
     @Column(nullable = false, length = 250)
-    public String password;
+    private String password;
 
     public Long getId() {
         return id;
