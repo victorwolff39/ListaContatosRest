@@ -1,4 +1,4 @@
-package net.alerok.listacontatosrest.user;
+package net.alerok.listacontatosrest.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

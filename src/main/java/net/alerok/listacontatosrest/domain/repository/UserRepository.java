@@ -1,5 +1,6 @@
-package net.alerok.listacontatosrest.user;
+package net.alerok.listacontatosrest.domain.repository;
 
+import net.alerok.listacontatosrest.domain.model.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

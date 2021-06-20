@@ -1,44 +1,45 @@
-package net.alerok.listacontatosrest.user;
+package net.alerok.listacontatosrest.domain;
 
+import net.alerok.listacontatosrest.domain.model.User;
+import net.alerok.listacontatosrest.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@RestController
-@RequestMapping(path = "/api/users")
-public class UserController {
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     //Get users
-    @GetMapping()
     public Iterable<User> getAll() {
         return userRepository.getAll();
     }
 
     //Get specific users
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<User> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<User> getById(Long id) {
         return userRepository.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     //Add a new user
-    @PostMapping()
-    public User add(@RequestBody User user) {
+    public User add(User user) {
         verifyUser(user);
         return userRepository.save(user);
     }
 
     //Edit a user
-    @PutMapping(path = "/{id}")
-    public User edit(@PathVariable("id") Long id, @RequestBody User user) {
+    public User edit(Long id, User user) {
         if (!userExists(id))
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "user_not_found");
         verifyUser(user);
@@ -47,8 +48,7 @@ public class UserController {
     }
 
     //Delete a user
-    @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(Long id) {
         if (!userExists(id)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "user_not_found");
         }
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     //Verify is the id field exists and if there is already a user with the same login
-    public void verifyUser(User user) {
+    private void verifyUser(User user) {
         if (user.getId() != null)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "invalid_user_data");
 
@@ -65,12 +65,12 @@ public class UserController {
     }
 
     //Verify if a user exists
-    public boolean userExists(Long id) {
+    private boolean userExists(Long id) {
         return userRepository.findById(id).isPresent();
     }
 
     //Verify if a login already exists
-    public boolean loginExists(String login) {
+    private boolean loginExists(String login) {
         List<User> users = userRepository.getAll();
         for (User user : users) {
             if (user.getLogin().equals(login)) return true;
