@@ -20,32 +20,35 @@ public class UserController {
 
     //Get users
     @GetMapping()
-    public Iterable<User> getAll() {
-        return userService.getAll();
+    public ResponseEntity<Iterable<User>> getAll() {
+        return ResponseEntity.ok().body(userService.getAll());
     }
 
     //Get specific users
     @GetMapping(path = "/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") Long id) {
-        return userService.getById(id);
+        return userService.getById(id)
+                .map(record -> ResponseEntity.ok().body(record))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     //Add a new user
     @PostMapping()
-    public User add(@RequestBody User user) {
-        return userService.add(user);
+    public ResponseEntity<User> add(@RequestBody User user) {
+        return ResponseEntity.ok().body(userService.add(user));
     }
 
     //Edit a user
     @PutMapping(path = "/{id}")
-    public User edit(@PathVariable("id") Long id, @RequestBody User user) {
-        return userService.edit(id, user);
+    public ResponseEntity<User> edit(@PathVariable("id") Long id, @RequestBody User user) {
+        return ResponseEntity.ok().body(userService.edit(id, user));
     }
 
     //Delete a user
     @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         userService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 }

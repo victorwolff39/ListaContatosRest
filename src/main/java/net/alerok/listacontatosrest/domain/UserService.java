@@ -4,11 +4,11 @@ import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -26,10 +26,8 @@ public class UserService {
     }
 
     //Get specific users
-    public ResponseEntity<User> getById(Long id) {
-        return userRepository.findById(id)
-                .map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<User> getById(Long id) {
+        return userRepository.findById(id);
     }
 
     //Add a new user
@@ -41,7 +39,7 @@ public class UserService {
     //Edit a user
     public User edit(Long id, User user) {
         if (!userExists(id))
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "user_not_found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found");
         verifyUser(user);
         user.setId(id);
         return userRepository.save(user);
@@ -50,7 +48,7 @@ public class UserService {
     //Delete a user
     public void delete(Long id) {
         if (!userExists(id)) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "user_not_found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found");
         }
         userRepository.deleteById(id);
     }
@@ -58,7 +56,7 @@ public class UserService {
     //Verify is the id field exists and if there is already a user with the same login
     private void verifyUser(User user) {
         if (user.getId() != null)
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "invalid_user_data");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid_user_data");
 
         if (loginExists(user.getLogin()))
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "login_already_exists");
