@@ -4,6 +4,9 @@ import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -11,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -20,12 +23,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        return null;
+    }
+
     //Get users
     public Iterable<User> getAll() {
         return userRepository.getAll();
     }
 
-    //Get specific users
+    //Get a specific user by id
     public Optional<User> getById(Long id) {
         return userRepository.findById(id);
     }
