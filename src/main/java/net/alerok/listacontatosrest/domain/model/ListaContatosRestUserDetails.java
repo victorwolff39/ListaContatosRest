@@ -1,55 +1,66 @@
 package net.alerok.listacontatosrest.domain.model;
 
-import net.alerok.listacontatosrest.domain.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListaContatosRestUserDetails implements UserDetails {
 
-    private final UserService userService;
-    private final String login;
+    private String username;
+    private String password;
+    private boolean active;
+    private List<GrantedAuthority> authorities;
 
-    @Autowired
-    public ListaContatosRestUserDetails(UserService userService, String login) {
-        this.userService = userService;
-        this.login = login;
+    public ListaContatosRestUserDetails(User user) {
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.active = true;
+        this.authorities = Arrays.stream(user.getRoles().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        System.out.println(authorities);
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        //TODO: implement isAccountNonExpired
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        //TODO: implement isAccountNonLocked
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        //TODO: implement isCredentialsNonExpired
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return active;
     }
 }

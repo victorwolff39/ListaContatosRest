@@ -1,5 +1,6 @@
-package net.alerok.listacontatosrest.domain;
+package net.alerok.listacontatosrest.domain.service;
 
+import net.alerok.listacontatosrest.domain.model.ListaContatosRestUserDetails;
 import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,10 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.getUserByUsername(username);
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));
+        return user.map(ListaContatosRestUserDetails::new).get();
     }
 
     //Get users
@@ -61,13 +64,13 @@ public class UserService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
-    //Verify is the id field exists and if there is already a user with the same login
+    //Verify is the id field exists and if there is already a user with the same username
     private void verifyUser(User user) {
         if (user.getId() != null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid_user_data");
 
-        if (loginExists(user.getLogin()))
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "login_already_exists");
+        if (usernameExists(user.getUsername()))
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "username_already_exists");
     }
 
     //Verify if a user exists
@@ -75,11 +78,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).isPresent();
     }
 
-    //Verify if a login already exists
-    private boolean loginExists(String login) {
+    //Verify if a username already exists
+    private boolean usernameExists(String username) {
         List<User> users = userRepository.getAll();
         for (User user : users) {
-            if (user.getLogin().equals(login)) return true;
+            if (user.getUsername().equals(username)) return true;
         }
         return false;
     }

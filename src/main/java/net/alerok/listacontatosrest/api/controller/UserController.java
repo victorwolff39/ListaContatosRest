@@ -1,6 +1,6 @@
 package net.alerok.listacontatosrest.api.controller;
 
-import net.alerok.listacontatosrest.domain.UserService;
+import net.alerok.listacontatosrest.domain.service.UserService;
 import net.alerok.listacontatosrest.domain.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

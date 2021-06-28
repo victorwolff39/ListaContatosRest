@@ -1,4 +1,4 @@
-package net.alerok.listacontatosrest.domain;
+package net.alerok.listacontatosrest.domain.service;
 
 import org.springframework.stereotype.Service;
 
