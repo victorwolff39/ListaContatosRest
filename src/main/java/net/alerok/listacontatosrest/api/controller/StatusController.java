@@ -1,6 +1,6 @@
 package net.alerok.listacontatosrest.api.controller;
 
-import net.alerok.listacontatosrest.domain.StatusService;
+import net.alerok.listacontatosrest.domain.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
