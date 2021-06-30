@@ -1,4 +1,5 @@
 package net.alerok.listacontatosrest.api.auth;
+
 import net.alerok.listacontatosrest.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,11 +30,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable().authorizeRequests()
                 .antMatchers("/api/users/**").hasAuthority("ADMIN")
+                .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/status").permitAll()
                 .antMatchers("/").permitAll()
-                .and().formLogin();
+                .anyRequest().authenticated();
+                //.and().formLogin();
     }
 
     @Bean
