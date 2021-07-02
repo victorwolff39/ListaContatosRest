@@ -1,9 +1,10 @@
 package net.alerok.listacontatosrest.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "mc_user")
 public class User {
@@ -27,6 +28,9 @@ public class User {
     @Column(nullable = false)
     private boolean active;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Set<Contact> contacts = new HashSet<>();
 
     //Getters & Setters
     public Long getId() {
@@ -75,5 +79,13 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Set<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<Contact> contacts) {
+        this.contacts = contacts;
     }
 }
