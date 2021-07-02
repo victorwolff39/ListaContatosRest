@@ -1,5 +1,6 @@
 package net.alerok.listacontatosrest.api.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import net.alerok.listacontatosrest.domain.service.UserService;
 import net.alerok.listacontatosrest.domain.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            try {
+                username = jwtUtil.extractUsername(jwt);
+            } catch (ExpiredJwtException e) {
+                username = null;
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
