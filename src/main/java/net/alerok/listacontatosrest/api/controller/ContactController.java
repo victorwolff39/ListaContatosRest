@@ -3,7 +3,6 @@ package net.alerok.listacontatosrest.api.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.alerok.listacontatosrest.domain.model.Contact;
-import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
