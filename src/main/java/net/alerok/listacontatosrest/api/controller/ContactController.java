@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/users/contacts", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "REST API Contacts")
 @CrossOrigin(origins = "*")
 public class ContactController {
@@ -26,7 +26,7 @@ public class ContactController {
     }
 
     //Get user contacts
-    @GetMapping(path = "/{userId}")
+    @GetMapping(path = "/{userId}/contacts")
     @ApiOperation(value = "Get all contacts from a specified user")
     public ResponseEntity<List<Contact>> getAllFromUser(@PathVariable("userId") Long userId) {
         List<Contact> contacts;
@@ -39,7 +39,7 @@ public class ContactController {
     }
 
     //Add a new contact to a user
-    @PostMapping(path = "/{userId}")
+    @PostMapping(path = "/{userId}/contacts")
     @ApiOperation(value = "Create a new contact to a user.")
     public ResponseEntity<Contact> add(@PathVariable Long userId, @RequestBody Contact contact) {
         try {
