@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -21,12 +19,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class ContactController {
 
-    private final ContactService contactService;
-
     @Autowired
-    public ContactController(ContactService contactService) {
-        this.contactService = contactService;
-    }
+    private ContactService contactService;
 
     //Get user contacts
     @GetMapping(path = "/{userId}/contacts")
