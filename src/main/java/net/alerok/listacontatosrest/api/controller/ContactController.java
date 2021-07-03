@@ -5,12 +5,15 @@ import io.swagger.annotations.ApiOperation;
 import net.alerok.listacontatosrest.domain.model.Contact;
 import net.alerok.listacontatosrest.domain.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,6 +49,29 @@ public class ContactController {
             return ResponseEntity.ok().body(contactService.add(userId, contact));
         } catch (ResponseStatusException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    //Edit a contact
+    @PutMapping(path = "/{userId}/contacts/{id}")
+    @ApiOperation(value = "Edit a contact.")
+    public ResponseEntity<?> edit(@PathVariable Long userId, @PathVariable Long id, @RequestBody Contact contact) {
+        try {
+            return ResponseEntity.ok().body(contactService.edit(userId, id, contact));
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    //Delete a contact
+    @DeleteMapping(path = "/{userId}/contacts/{id}")
+    @ApiOperation(value = "Delete a contact.")
+    public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long id) {
+        try {
+            contactService.delete(userId, id);
+            return ResponseEntity.ok().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

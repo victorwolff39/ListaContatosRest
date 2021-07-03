@@ -1,12 +1,10 @@
 package net.alerok.listacontatosrest.domain.service;
 
 import net.alerok.listacontatosrest.domain.model.Contact;
-import net.alerok.listacontatosrest.domain.model.ListaContatosRestUserDetails;
 import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,9 +29,32 @@ public class ContactService {
 
     //Add a new contact
     public Contact add(Long userId, Contact contact) throws ResponseStatusException {
-        User user = userService.getById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found"));
-        contact.setUser(user);
+        contact.setUser(getUserById(userId));
         return contactRepository.save(contact);
     }
 
+    //Edit a contact
+    public Contact edit(Long userId, Long id, Contact contact) {
+        contact.setUser(getUserById(userId));
+        contact.setId(id);
+        if (contactRepository.findById(id).isPresent()) {
+            return contactRepository.save(contact);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "contact_not_found");
+        }
+    }
+
+    //Delete contact
+    public void delete(Long userId, Long id) {
+        getUserById(userId);
+        if (contactRepository.findById(id).isPresent()) {
+            contactRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "contact_not_found");
+        }
+    }
+
+    private User getUserById(Long userId) {
+        return userService.getById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found"));
+    }
 }
