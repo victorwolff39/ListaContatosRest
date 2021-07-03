@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ContactRepository extends CrudRepository<Contact, Long> {
 
-    @Query("SELECT c FROM mc_contact c WHERE c.user.id = :userId")
+    @Query("SELECT c FROM mc_contact c WHERE c.user.id = :userId ORDER BY c.id")
     Optional<List<Contact>> getAllFromUser(@Param("userId") Long userId);
 
 }
