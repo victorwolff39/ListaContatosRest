@@ -1,5 +1,6 @@
 package net.alerok.listacontatosrest.domain.service;
 
+import net.alerok.listacontatosrest.domain.model.Contact;
 import net.alerok.listacontatosrest.domain.model.ListaContatosRestUserDetails;
 import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.repository.UserRepository;
@@ -17,12 +18,11 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private ContactService contactService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -61,7 +61,11 @@ public class UserService implements UserDetailsService {
         if (!userExists(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found");
         }
-        userRepository.deleteById(id);
+        List<Contact> contacts = contactService.getAllFromUser(id);
+        contacts.forEach(contact->contactService.delete(id, contact.getId()));
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        }
     }
 
     //Verify is the id field exists and if there is already a user with the same username
