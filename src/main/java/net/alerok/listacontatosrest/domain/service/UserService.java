@@ -31,6 +31,11 @@ public class UserService implements UserDetailsService {
         return user.map(ListaContatosRestUserDetails::new).get();
     }
 
+    //Get user by username
+    public User getUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));
+    }
+
     //Get users
     public Iterable<User> getAll() {
         return userRepository.getAll();
