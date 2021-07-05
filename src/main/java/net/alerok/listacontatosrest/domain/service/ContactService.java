@@ -1,6 +1,7 @@
 package net.alerok.listacontatosrest.domain.service;
 
 import net.alerok.listacontatosrest.domain.model.Contact;
+import net.alerok.listacontatosrest.domain.model.ContactField;
 import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,19 @@ public class ContactService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ContactFieldService contactFieldService;
+
     //Get all contacts from a user
     public List<Contact> getAllFromUser(Long userId) throws ResponseStatusException {
         Optional<List<Contact>> contacts = contactRepository.getAllFromUser(userId);
         contacts.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found"));
         return contacts.get();
+    }
+
+    //Get contact by id
+    public Optional<Contact> getById(Long id) {
+        return contactRepository.findById(id);
     }
 
     //Add a new contact
@@ -48,10 +57,17 @@ public class ContactService {
     public void delete(Long userId, Long id) {
         getUserById(userId);
         if (contactRepository.findById(id).isPresent()) {
+            deleteFields(userId, id);
             contactRepository.deleteById(id);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "contact_not_found");
         }
+    }
+
+    //Delete all fields from contact
+    public void deleteFields(Long userId, Long contactId) {
+        List<ContactField> fields = contactFieldService.getAllFromContact(userId, contactId);
+        fields.forEach(field -> contactFieldService.delete(userId, contactId, field.getId()));
     }
 
     private User getUserById(Long userId) {
