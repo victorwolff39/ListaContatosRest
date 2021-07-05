@@ -2,8 +2,6 @@ package net.alerok.listacontatosrest.domain.service;
 
 import net.alerok.listacontatosrest.domain.model.AuthenticationRequest;
 import net.alerok.listacontatosrest.domain.model.AuthenticationResponse;
-import net.alerok.listacontatosrest.domain.model.ListaContatosRestUserDetails;
-import net.alerok.listacontatosrest.domain.model.User;
 import net.alerok.listacontatosrest.domain.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +34,7 @@ public class AuthenticationService {
         final UserDetails userDetails =  userService.loadUserByUsername(authenticationRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, userService.getUserByUsername(authenticationRequest.getUsername()).getId()));
     }
 
 }
