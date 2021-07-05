@@ -3,6 +3,8 @@ package net.alerok.listacontatosrest.domain.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "mc_contact")
 public class Contact {
@@ -18,6 +20,10 @@ public class Contact {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "contact")
+    private Set<ContactField> contactField = new HashSet<>();
 
     public Long getId() {
         return id;
