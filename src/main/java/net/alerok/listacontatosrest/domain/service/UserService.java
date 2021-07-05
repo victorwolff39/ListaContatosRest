@@ -61,11 +61,16 @@ public class UserService implements UserDetailsService {
         if (!userExists(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user_not_found");
         }
-        List<Contact> contacts = contactService.getAllFromUser(id);
-        contacts.forEach(contact->contactService.delete(id, contact.getId()));
+        deleteContacts(id);
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         }
+    }
+
+    //Delete all contacts from user
+    void deleteContacts(Long userId) {
+        List<Contact> contacts = contactService.getAllFromUser(userId);
+        contacts.forEach(contact->contactService.delete(userId, contact.getId()));
     }
 
     //Verify is the id field exists and if there is already a user with the same username
