@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -23,6 +24,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -49,6 +53,7 @@ public class UserService implements UserDetailsService {
     //Add a new user
     public User add(User user) {
         verifyUser(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
